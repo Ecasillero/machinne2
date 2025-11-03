@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor Ambiental ESP32</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
+        h1 { color: #333; }
+        .dato { font-size: 1.5em; margin: 10px 0; }
+        .clase { font-weight: bold; font-size: 1.8em; }
+    </style>
+</head>
+<body>
+    <h1>Monitor Ambiental ESP32</h1>
+    <div class="dato">PM2.5 (ppm): <span id="ppm">0</span></div>
+    <div class="dato">Temperatura (°C): <span id="temp">0</span></div>
+    <div class="dato">Humedad (%): <span id="hum">0</span></div>
+    <div class="dato clase">Clasificación: <span id="clase">Desconocido</span></div>
+
+    <script>
+        async function actualizarDatos() {
+            try {
+                const response = await fetch('/ultimo');
+                const data = await response.json();
+                document.getElementById('ppm').textContent = data.ppm.toFixed(2);
+                document.getElementById('temp').textContent = data.temperatura.toFixed(2);
+                document.getElementById('hum').textContent = data.humedad.toFixed(2);
+                document.getElementById('clase').textContent = data.clase;
+            } catch (error) {
+                console.error("Error al obtener datos:", error);
+            }
+        }
+
+        // Actualizar cada 2 segundos
+        setInterval(actualizarDatos, 2000);
+        actualizarDatos();
+    </script>
+</body>
+</html>
